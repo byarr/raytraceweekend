@@ -13,3 +13,5 @@ jobs:
       - {name: test, uses: actions-rs/cargo@v1, with: {command: test} }
       - {name: clippy, uses: actions-rs/cargo@v1, with: {command: clippy, args: -- -D warnings}}
       - {name: format, uses: actions-rs/cargo@v1, with: {command: fmt, args: --all -- --check}}
+      - {shell: bash, run: mkdir output && ./target/debug/raytraceweekend > output/img1.ppm}
+      - {name: upload, uses: actions/upload-artifact@v3, with: {path: output/*} }
