@@ -1,6 +1,5 @@
 use raytraceweekend::{Colour, Point3, Ray, Sphere, Vec3};
 
-
 fn ray_colour(r: &Ray) -> Colour {
     let s = Sphere {
         center: Point3::new(0.0, 0.0, -1.0),
