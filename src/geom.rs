@@ -1,5 +1,5 @@
 use std::fmt::{Display, Formatter};
-use std::ops::{Add, AddAssign, DivAssign, Index, Mul, MulAssign};
+use std::ops::{Add, AddAssign, Div, DivAssign, Index, Mul, MulAssign, Sub};
 
 #[derive(Debug, PartialOrd, PartialEq, Default, Copy, Clone)]
 pub struct Vec3 {
@@ -21,6 +21,21 @@ impl Vec3 {
 
     pub fn length(&self) -> f64 {
         self.length_squared().sqrt()
+    }
+
+    pub fn unit_vector(&self) -> Vec3 {
+        let length = self.length();
+        self.clone() / length
+    }
+
+    pub fn x(&self) -> f64 {
+        return self.e[0]
+    }
+    pub fn y(&self) -> f64 {
+        return self.e[1]
+    }
+    pub fn z(&self) -> f64 {
+        return self.e[2]
     }
 }
 
@@ -44,11 +59,33 @@ impl Add for Vec3 {
     }
 }
 
+impl Sub for Vec3 {
+    type Output = Vec3;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        Vec3::new(
+            self.e[0] - rhs.e[0],
+            self.e[1] - rhs.e[1],
+            self.e[2] - rhs.e[2],
+        )
+    }
+}
+
+
+
 impl Mul<f64> for Vec3 {
     type Output = Vec3;
 
     fn mul(self, rhs: f64) -> Self::Output {
         Vec3::new(self.e[0] * rhs, self.e[1] * rhs, self.e[2] * rhs)
+    }
+}
+
+impl Mul<Vec3> for f64 {
+    type Output = Vec3;
+
+    fn mul(self, rhs: Vec3) -> Self::Output {
+        rhs * self
     }
 }
 
@@ -62,6 +99,14 @@ impl MulAssign<f64> for Vec3 {
 impl DivAssign<f64> for Vec3 {
     fn div_assign(&mut self, rhs: f64) {
         self.mul_assign(1.0 / rhs)
+    }
+}
+
+impl Div<f64> for Vec3 {
+    type Output = Vec3;
+
+    fn div(self, rhs: f64) -> Self::Output {
+        Vec3::new(self.x()/rhs, self.y()/rhs, self.z()/rhs)
     }
 }
 
@@ -96,8 +141,8 @@ impl Display for Colour {
 
 #[derive(Debug)]
 pub struct Ray {
-    origin: Point3,
-    direction: Vec3,
+    pub origin: Point3,
+    pub direction: Vec3,
 }
 
 impl Ray {
@@ -108,6 +153,7 @@ impl Ray {
     pub fn at(&self, t: f64) -> Point3 {
         self.origin + self.direction * t
     }
+
 }
 
 #[cfg(test)]
