@@ -1,7 +1,7 @@
-use std::fmt::{Display, Formatter, write};
-use std::ops::{AddAssign, DivAssign, Index, MulAssign};
+use std::fmt::{Display, Formatter};
+use std::ops::{Add, AddAssign, DivAssign, Index, Mul, MulAssign};
 
-#[derive(Debug, PartialOrd, PartialEq, Default)]
+#[derive(Debug, PartialOrd, PartialEq, Default, Copy, Clone)]
 pub struct Vec3 {
     e: [f64; 3]
 }
@@ -30,6 +30,23 @@ impl AddAssign for Vec3 {
         for i in 0..3 {
             self.e[i] += rhs.e[i];
         }
+    }
+}
+
+impl Add for Vec3 {
+    type Output = Vec3;
+
+    fn add(self, rhs: Self) -> Self::Output {
+
+        Vec3::new(self.e[0] + rhs.e[0], self.e[1] + rhs.e[1], self.e[2] + rhs.e[2])
+    }
+}
+
+impl Mul<f64> for Vec3 {
+    type Output = Vec3;
+
+    fn mul(self, rhs: f64) -> Self::Output {
+        Vec3::new(self.e[0] * rhs, self.e[1] * rhs, self.e[2] * rhs)
     }
 }
 
@@ -75,6 +92,24 @@ impl Display for Colour {
     }
 }
 
+#[derive(Debug)]
+pub struct Ray {
+    origin: Point3,
+    direction: Vec3,
+}
+
+impl Ray {
+    pub fn new(origin: Point3, direction: Vec3) -> Self {
+        Ray {
+            origin, direction
+        }
+    }
+
+    pub fn at(&self, t: f64) -> Point3 {
+        self.origin + self.direction * t
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -84,6 +119,20 @@ mod tests {
         let v = Vec3::new(3.0, 4.0, 5.0);
         assert_eq!(50.0, v.length_squared());
         assert!(f64::abs(7.07 - v.length()) < 0.01);
+    }
+
+    #[test]
+    fn test_ray_at() {
+        let d  = Vec3::new(3.0, 4.0, 5.0);
+        let o = Point3::new(2.0, 3.0, 4.0);
+        let ray = Ray::new(o, d);
+
+        let vec3 = ray.at(3.5);
+        assert_eq!(12.5, vec3.e[0]);
+        assert_eq!(17.0, vec3.e[1]);
+        assert_eq!(21.5, vec3.e[2]);
+
+
     }
 
 }
