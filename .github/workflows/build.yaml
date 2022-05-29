@@ -1,0 +1,15 @@
+on: [push, pull_request]
+
+name: Continuous integration
+
+jobs:
+  build_and_run:
+    name: Build and run
+    runs-on: ubuntu-latest
+    steps:
+      - {name: Checkout, uses: actions/checkout@v2 }
+      - {name: Toolchain, uses: actions-rs/toolchain@v1, with: {profile: minimal, toolchain: stable, override: true}}
+      - {name: build, uses: actions-rs/cargo@v1, with: {command: build}}
+      - {name: test, uses: actions-rs/cargo@v1, with: {command: test} }
+      - {name: clippy, uses: actions-rs/cargo@v1, with: {command: clippy, args: -- -D warnings}}
+      - {name: format, uses: actions-rs/cargo@v1, with: {command: fmt, args: --all -- --check}}
