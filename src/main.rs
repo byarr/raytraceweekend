@@ -9,8 +9,8 @@ fn ray_colour(r: &Ray) -> Colour {
     let hit = s.hit(r);
 
     if let Some(t) = hit {
-        let N = (r.at(t) - Vec3::new(0.0, 0.0, -1.0)).unit_vector();
-        return 0.5 * Colour::new(N.x() + 1.0, N.y() + 1.0, N.z() + 1.0);
+        let n = (r.at(t) - Vec3::new(0.0, 0.0, -1.0)).unit_vector();
+        return 0.5 * Colour::new(n.x() + 1.0, n.y() + 1.0, n.z() + 1.0);
     }
 
     let unit = r.direction.unit_vector();
