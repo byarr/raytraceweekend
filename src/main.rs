@@ -1,6 +1,15 @@
-use raytraceweekend::{Colour, Point3, Ray, Vec3};
+use std::vec::Splice;
+use raytraceweekend::{Colour, Point3, Ray, Sphere, Vec3};
 
 fn ray_colour(r: &Ray) -> Colour {
+
+    let s = Sphere {
+        center: Point3::new(0.0, 0.0, -1.0),
+        radius: 0.5,
+    };
+    if s.hit(r) {
+        return Colour::new(1.0, 0.0, 0.0);
+    }
     let unit = r.direction.unit_vector();
     let t = 0.5*(unit.y() + 1.0);
     return (1.0-t)*Colour::new(1.0, 1.0, 1.0) + t*Colour::new(0.5, 0.7, 1.0);

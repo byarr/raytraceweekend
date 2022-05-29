@@ -1,3 +1,5 @@
+pub mod shape;
+
 use std::fmt::{Display, Formatter};
 use std::ops::{Add, AddAssign, Div, DivAssign, Index, Mul, MulAssign, Sub};
 
@@ -13,6 +15,10 @@ impl Vec3 {
     pub fn new(x: f64, y: f64, z: f64) -> Self {
         let e = [x, y, z];
         Self { e }
+    }
+
+    pub fn dot(&self, other: &Self) -> f64 {
+        self.e.iter().zip(other.e.iter()).map(|x| x.0 * x.1 ).sum()
     }
 
     pub fn length_squared(&self) -> f64 {
