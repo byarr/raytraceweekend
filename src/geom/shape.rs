@@ -14,8 +14,8 @@ impl Sphere {
 
         let discriminant = b * b - 4.0 * a * c;
         if discriminant < 0.0 {
-            return None
+            return None;
         }
-        return Some( (-b - discriminant.sqrt() ) / (2.0*a));
+        return Some((-b - discriminant.sqrt()) / (2.0 * a));
     }
 }

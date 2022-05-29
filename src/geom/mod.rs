@@ -18,7 +18,7 @@ impl Vec3 {
     }
 
     pub fn dot(&self, other: &Self) -> f64 {
-        self.e.iter().zip(other.e.iter()).map(|x| x.0 * x.1 ).sum()
+        self.e.iter().zip(other.e.iter()).map(|x| x.0 * x.1).sum()
     }
 
     pub fn length_squared(&self) -> f64 {
@@ -35,13 +35,13 @@ impl Vec3 {
     }
 
     pub fn x(&self) -> f64 {
-        return self.e[0]
+        return self.e[0];
     }
     pub fn y(&self) -> f64 {
-        return self.e[1]
+        return self.e[1];
     }
     pub fn z(&self) -> f64 {
-        return self.e[2]
+        return self.e[2];
     }
 }
 
@@ -77,8 +77,6 @@ impl Sub for Vec3 {
     }
 }
 
-
-
 impl Mul<f64> for Vec3 {
     type Output = Vec3;
 
@@ -112,7 +110,7 @@ impl Div<f64> for Vec3 {
     type Output = Vec3;
 
     fn div(self, rhs: f64) -> Self::Output {
-        Vec3::new(self.x()/rhs, self.y()/rhs, self.z()/rhs)
+        Vec3::new(self.x() / rhs, self.y() / rhs, self.z() / rhs)
     }
 }
 
@@ -159,7 +157,6 @@ impl Ray {
     pub fn at(&self, t: f64) -> Point3 {
         self.origin + self.direction * t
     }
-
 }
 
 #[cfg(test)]
