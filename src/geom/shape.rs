@@ -6,13 +6,16 @@ pub struct Sphere {
 }
 
 impl Sphere {
-    pub fn hit(&self, r: &Ray) -> bool {
+    pub fn hit(&self, r: &Ray) -> Option<f64> {
         let oc = r.origin - self.center;
         let a = r.direction.dot(&r.direction);
         let b = 2.0 * oc.dot(&r.direction);
         let c = oc.dot(&oc) - self.radius * self.radius;
 
         let discriminant = b * b - 4.0 * a * c;
-        discriminant > 0.0
+        if discriminant < 0.0 {
+            return None
+        }
+        return Some( (-b - discriminant.sqrt() ) / (2.0*a));
     }
 }

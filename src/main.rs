@@ -7,15 +7,17 @@ fn ray_colour(r: &Ray) -> Colour {
         center: Point3::new(0.0, 0.0, -1.0),
         radius: 0.5,
     };
-    if s.hit(r) {
-        return Colour::new(1.0, 0.0, 0.0);
+    let hit = s.hit(&r);
+
+    if let Some(t) = hit {
+        let N = (r.at(t) - Vec3::new(0.0,0.0,-1.0)).unit_vector();
+        return 0.5*Colour::new(N.x()+1.0, N.y()+1.0, N.z()+1.0);
     }
+
     let unit = r.direction.unit_vector();
     let t = 0.5*(unit.y() + 1.0);
     return (1.0-t)*Colour::new(1.0, 1.0, 1.0) + t*Colour::new(0.5, 0.7, 1.0);
 }
-
-
 
 fn main() {
     // Image
