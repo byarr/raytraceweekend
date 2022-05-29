@@ -31,17 +31,17 @@ impl Vec3 {
 
     pub fn unit_vector(&self) -> Vec3 {
         let length = self.length();
-        self.clone() / length
+        *self / length
     }
 
     pub fn x(&self) -> f64 {
-        return self.e[0];
+        self.e[0]
     }
     pub fn y(&self) -> f64 {
-        return self.e[1];
+        self.e[1]
     }
     pub fn z(&self) -> f64 {
-        return self.e[2];
+        self.e[2]
     }
 }
 

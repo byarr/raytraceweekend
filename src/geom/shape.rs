@@ -16,6 +16,6 @@ impl Sphere {
         if discriminant < 0.0 {
             return None;
         }
-        return Some((-b - discriminant.sqrt()) / (2.0 * a));
+        Some((-b - discriminant.sqrt()) / (2.0 * a))
     }
 }
