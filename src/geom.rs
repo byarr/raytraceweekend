@@ -3,17 +3,16 @@ use std::ops::{Add, AddAssign, DivAssign, Index, Mul, MulAssign};
 
 #[derive(Debug, PartialOrd, PartialEq, Default, Copy, Clone)]
 pub struct Vec3 {
-    e: [f64; 3]
+    e: [f64; 3],
 }
 
 pub type Colour = Vec3;
 pub type Point3 = Vec3;
 
 impl Vec3 {
-
     pub fn new(x: f64, y: f64, z: f64) -> Self {
         let e = [x, y, z];
-        Self {e}
+        Self { e }
     }
 
     pub fn length_squared(&self) -> f64 {
@@ -37,8 +36,11 @@ impl Add for Vec3 {
     type Output = Vec3;
 
     fn add(self, rhs: Self) -> Self::Output {
-
-        Vec3::new(self.e[0] + rhs.e[0], self.e[1] + rhs.e[1], self.e[2] + rhs.e[2])
+        Vec3::new(
+            self.e[0] + rhs.e[0],
+            self.e[1] + rhs.e[1],
+            self.e[2] + rhs.e[2],
+        )
     }
 }
 
@@ -85,9 +87,9 @@ impl Colour {
 
 impl Display for Colour {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        let r = (self.r()  * 255.999) as i32;
-        let g = (self.g()  * 255.999) as i32;
-        let b = (self.b()  * 255.999) as i32;
+        let r = (self.r() * 255.999) as i32;
+        let g = (self.g() * 255.999) as i32;
+        let b = (self.b() * 255.999) as i32;
         write!(f, "{r} {g} {b}")
     }
 }
@@ -100,9 +102,7 @@ pub struct Ray {
 
 impl Ray {
     pub fn new(origin: Point3, direction: Vec3) -> Self {
-        Ray {
-            origin, direction
-        }
+        Ray { origin, direction }
     }
 
     pub fn at(&self, t: f64) -> Point3 {
@@ -123,7 +123,7 @@ mod tests {
 
     #[test]
     fn test_ray_at() {
-        let d  = Vec3::new(3.0, 4.0, 5.0);
+        let d = Vec3::new(3.0, 4.0, 5.0);
         let o = Point3::new(2.0, 3.0, 4.0);
         let ray = Ray::new(o, d);
 
@@ -131,8 +131,5 @@ mod tests {
         assert_eq!(12.5, vec3.e[0]);
         assert_eq!(17.0, vec3.e[1]);
         assert_eq!(21.5, vec3.e[2]);
-
-
     }
-
 }
