@@ -8,14 +8,14 @@ pub struct Sphere {
 impl Sphere {
     pub fn hit(&self, r: &Ray) -> Option<f64> {
         let oc = r.origin - self.center;
-        let a = r.direction.dot(&r.direction);
-        let b = 2.0 * oc.dot(&r.direction);
-        let c = oc.dot(&oc) - self.radius * self.radius;
+        let a = r.direction.length_squared();
+        let half_b = oc.dot(&r.direction);
+        let c = oc.length_squared() - self.radius * self.radius;
 
-        let discriminant = b * b - 4.0 * a * c;
+        let discriminant = half_b * half_b - a * c;
         if discriminant < 0.0 {
             return None;
         }
-        Some((-b - discriminant.sqrt()) / (2.0 * a))
+        Some((-half_b - discriminant.sqrt()) / (a))
     }
 }
