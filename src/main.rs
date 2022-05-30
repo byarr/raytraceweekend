@@ -1,4 +1,5 @@
-use raytraceweekend::{Colour, Point3, Ray, Sphere, Vec3};
+use std::io::stdout;
+use raytraceweekend::{Colour, Point3, Ray, Sphere, Vec3, write_png};
 
 fn ray_colour(r: &Ray) -> Colour {
     let s = Sphere {
@@ -18,6 +19,7 @@ fn ray_colour(r: &Ray) -> Colour {
 }
 
 fn main() {
+
     // Image
     let aspect_ratio = 16.0 / 9.0;
     let image_width = 400;
@@ -34,7 +36,8 @@ fn main() {
     let lower_left_corner =
         origin - horizontal / 2.0 - vertical / 2.0 - Vec3::new(0.0, 0.0, focal_length);
 
-    println!("P3\n{image_width} {image_height}\n255");
+    let mut result = Vec::new();
+    // println!("P3\n{image_width} {image_height}\n255");
     for j in (0..image_height).rev() {
         eprintln!("Scan lines remaining {j}");
         for i in 0..image_width {
@@ -45,8 +48,11 @@ fn main() {
                 lower_left_corner + horizontal * u + vertical * v - origin,
             );
             let pixel_color = ray_colour(&r);
-            println!("{pixel_color}");
+            result.push(pixel_color);
+            // println!("{pixel_color}");
         }
     }
+
+    write_png(&mut stdout(), &result, image_width as u32, image_height as u32);
     eprintln!("Done!")
 }
