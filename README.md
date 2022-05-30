@@ -4,4 +4,4 @@ https://raytracing.github.io/books/RayTracingInOneWeekend.html#overview
 
 ## Simple sphere
 
-![image](image.png)
+![image](output/sphere.png)
