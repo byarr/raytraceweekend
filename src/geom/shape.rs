@@ -26,6 +26,27 @@ pub trait Hittable {
     fn hit(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord>;
 }
 
+pub struct HittableList {
+    pub objects: Vec<Box<dyn Hittable>>
+}
+
+impl Hittable for HittableList {
+    fn hit(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
+        let mut temp_rec: Option<HitRecord> = None;
+        // bool hit_anything = false;
+        let mut closest_so_far = t_max;
+
+        for object in &self.objects {
+            let rec = object.hit(r, t_min, closest_so_far);
+            if let Some(r) = rec {
+                closest_so_far = r.t;
+                temp_rec = Some(r);
+            }
+        }
+        return temp_rec;
+    }
+}
+
 impl Hittable for Sphere {
     fn hit(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
         let oc = r.origin - self.center;
@@ -43,9 +64,9 @@ impl Hittable for Sphere {
 
         // Find the nearest root that lies in the acceptable range.
         let mut root = (-half_b - sqrtd) / a;
-        if (root < t_min || t_max < root) {
+        if root < t_min || t_max < root {
             root = (-half_b + sqrtd) / a;
-            if (root < t_min || t_max < root) {
+            if root < t_min || t_max < root {
                 return None
             }
         }
