@@ -1,7 +1,7 @@
 pub mod shape;
 
 use std::fmt::{Display, Formatter};
-use std::ops::{Add, AddAssign, Div, DivAssign, Index, Mul, MulAssign, Sub};
+use std::ops::{Add, AddAssign, Div, DivAssign, Index, Mul, MulAssign, Neg, Sub};
 
 #[derive(Debug, PartialOrd, PartialEq, Default, Copy, Clone)]
 pub struct Vec3 {
@@ -119,6 +119,14 @@ impl Index<usize> for Vec3 {
 
     fn index(&self, index: usize) -> &Self::Output {
         &self.e[index]
+    }
+}
+
+impl Neg for Vec3 {
+    type Output = Vec3;
+
+    fn neg(self) -> Self::Output {
+        Vec3::new(-self.x(), -self.y(), -self.z())
     }
 }
 

@@ -1,15 +1,16 @@
 use std::io::stdout;
 use raytraceweekend::{Colour, Point3, Ray, Sphere, Vec3, write_png};
+use raytraceweekend::geom::shape::Hittable;
 
 fn ray_colour(r: &Ray) -> Colour {
     let s = Sphere {
         center: Point3::new(0.0, 0.0, -1.0),
         radius: 0.5,
     };
-    let hit = s.hit(r);
+    let hit = s.hit(r, 0.0, f64::INFINITY);
 
     if let Some(t) = hit {
-        let n = (r.at(t) - Vec3::new(0.0, 0.0, -1.0)).unit_vector();
+        let n = (r.at(t.t) - Vec3::new(0.0, 0.0, -1.0)).unit_vector();
         return 0.5 * Colour::new(n.x() + 1.0, n.y() + 1.0, n.z() + 1.0);
     }
 

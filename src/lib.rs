@@ -1,4 +1,4 @@
-mod geom;
+pub mod geom;
 mod png;
 
 pub use geom::Colour;
