@@ -1,5 +1,5 @@
 use std::io::stdout;
-use raytraceweekend::{Colour, Point3, Ray, Sphere, Vec3, write_png};
+use raytraceweekend::{Camera, Colour, Point3, Ray, Sphere, Vec3, write_png};
 use raytraceweekend::geom::shape::{Hittable, HittableList};
 
 fn ray_colour<H: Hittable>(r: &Ray, hittable: &H) -> Colour {
@@ -28,15 +28,7 @@ fn main() {
     world.objects.push(Box::new(Sphere{ center: Point3::new(0.0, -100.5, -1.0), radius: 100.0 }));
 
     // Camera
-    let viewport_height = 2.0;
-    let viewport_width = aspect_ratio * viewport_height;
-    let focal_length = 1.0;
-
-    let origin = Point3::default();
-    let horizontal = Vec3::new(viewport_width, 0.0, 0.0);
-    let vertical = Vec3::new(0.0, viewport_height, 0.0);
-    let lower_left_corner =
-        origin - horizontal / 2.0 - vertical / 2.0 - Vec3::new(0.0, 0.0, focal_length);
+    let camera = Camera::default();
 
     let mut result = Vec::new();
     for j in (0..image_height).rev() {
@@ -44,10 +36,7 @@ fn main() {
         for i in 0..image_width {
             let u = (i as f64) / (image_width - 1) as f64;
             let v = (j as f64) / (image_height - 1) as f64;
-            let r = Ray::new(
-                origin,
-                lower_left_corner + horizontal * u + vertical * v - origin,
-            );
+            let r = camera.get_ray(u, v);
             let pixel_color = ray_colour(&r, &world);
             result.push(pixel_color);
             // println!("{pixel_color}");
