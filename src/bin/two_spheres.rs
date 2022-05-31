@@ -54,6 +54,6 @@ fn main() {
         }
     }
 
-    write_png(&mut stdout(), &result, image_width as u32, image_height as u32);
+    write_png(&mut stdout(), &result, image_width as u32, image_height as u32, 1 as u32);
     eprintln!("Done!")
 }

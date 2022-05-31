@@ -2,6 +2,7 @@ pub mod shape;
 
 use std::fmt::{Display, Formatter};
 use std::ops::{Add, AddAssign, Div, DivAssign, Index, Mul, MulAssign, Neg, Sub};
+use crate::clamp;
 
 #[derive(Debug, PartialOrd, PartialEq, Default, Copy, Clone)]
 pub struct Vec3 {
@@ -140,15 +141,23 @@ impl Colour {
     pub fn b(&self) -> f64 {
         self.e[2]
     }
-}
 
-impl Display for Colour {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        let r = (self.r() * 255.999) as i32;
-        let g = (self.g() * 255.999) as i32;
-        let b = (self.b() * 255.999) as i32;
-        write!(f, "{r} {g} {b}")
+    pub fn write_color(&self, samples_per_pixel: u32, data: &mut Vec<u8>) {
+        let mut r = self.r();
+        let mut g = self.g();
+        let mut b = self.b();
+
+        // Divide the color by the number of samples.
+        let scale = 1.0 / samples_per_pixel as f64;
+        r *= scale;
+        g *= scale;
+        b *= scale;
+
+        data.push((256.0 * clamp(r, 0.0, 0.999)) as u8);
+        data.push((256.0 * clamp(g, 0.0, 0.999)) as u8);
+        data.push((256.0 * clamp(b, 0.0, 0.999)) as u8);
     }
+
 }
 
 #[derive(Debug)]
