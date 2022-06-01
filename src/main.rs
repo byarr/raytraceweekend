@@ -5,17 +5,22 @@ use raytraceweekend::{Camera, Colour, Point3, Ray, Sphere, Vec3, write_png};
 use raytraceweekend::geom::shape::{Hittable, HittableList};
 
 
-fn ray_colour<H: Hittable>(r: &Ray, hittable: &H) -> Colour {
+fn ray_colour<H: Hittable>(r: &Ray, hittable: &H, depth: u32) -> Colour {
 
-    let hit = hittable.hit(r, 0.0, f64::INFINITY);
+    if depth <= 0 {
+        return Colour::new(0.0, 0.0, 0.0);
+    }
+
+    let hit = hittable.hit(r, 0.001, f64::INFINITY);
 
     if let Some(t) = hit {
-        return 0.5 * (t.normal + Colour::new(1.0,1.0,1.0));
+        let target = t.p + t.normal + Vec3::random_in_unit_sphere();
+        return 0.5 * ray_colour(&Ray::new(t.p, target - t.p), hittable, depth-1);
     }
 
     let unit = r.direction.unit_vector();
     let t = 0.5 * (unit.y() + 1.0);
-    (1.0 - t) * Colour::new(1.0, 1.0, 1.0) + t * Colour::new(0.5, 0.7, 1.0)
+    ((1.0 - t) * Colour::new(1.0, 1.0, 1.0)) + (t * Colour::new(0.5, 0.7, 1.0))
 }
 
 fn main() {
@@ -29,7 +34,7 @@ fn main() {
     let aspect_ratio = 16.0 / 9.0;
     let image_width = 400;
     let image_height = (image_width as f64 / aspect_ratio) as i32;
-
+    let max_depth = 50;
 
     // World
     let mut world = HittableList { objects: Vec::new() };
@@ -49,7 +54,7 @@ fn main() {
                 let u = (i as f64 + random_double(&mut rng, samples_per_pixel)) / (image_width-1) as f64;
                 let v = (j as f64 + random_double(&mut rng, samples_per_pixel)) / (image_height-1) as f64;
                 let r = camera.get_ray(u, v);
-                pixel_color += ray_colour(&r, &world);
+                pixel_color += ray_colour(&r, &world, max_depth);
             }
             result.push(pixel_color);
             // println!("{pixel_color}");

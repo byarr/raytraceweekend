@@ -1,7 +1,8 @@
 pub mod shape;
 
 use std::fmt::{Display, Formatter};
-use std::ops::{Add, AddAssign, Div, DivAssign, Index, Mul, MulAssign, Neg, Sub};
+use std::ops::{Add, AddAssign, Div, DivAssign, Index, Mul, MulAssign, Neg, Range, Sub};
+use rand::{Rng, thread_rng};
 use crate::clamp;
 
 #[derive(Debug, PartialOrd, PartialEq, Default, Copy, Clone)]
@@ -44,6 +45,17 @@ impl Vec3 {
     pub fn z(&self) -> f64 {
         self.e[2]
     }
+
+    pub fn random_in_unit_sphere() -> Vec3 {
+        loop {
+            let p = Vec3::new(thread_rng().gen_range(-1.0..1.0), thread_rng().gen_range(-1.0..1.0), thread_rng().gen_range(-1.0..1.0));
+            if p.length_squared() >= 1.0 {
+                continue;
+            }
+            return p;
+        }
+    }
+
 }
 
 impl AddAssign for Vec3 {
@@ -149,9 +161,9 @@ impl Colour {
 
         // Divide the color by the number of samples.
         let scale = 1.0 / samples_per_pixel as f64;
-        r *= scale;
-        g *= scale;
-        b *= scale;
+        r = (r * scale).sqrt();
+        g = (g * scale).sqrt();
+        b = (b * scale).sqrt();
 
         data.push((256.0 * clamp(r, 0.0, 0.999)) as u8);
         data.push((256.0 * clamp(g, 0.0, 0.999)) as u8);
