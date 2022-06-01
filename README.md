@@ -10,3 +10,5 @@ https://raytracing.github.io/books/RayTracingInOneWeekend.html#overview
 ## Two spheres
 
 ![image](output/two_spheres.png)
+
+![image](output/two_spheres_anti.png)

@@ -1,4 +1,6 @@
 use std::io::stdout;
+use rand::Rng;
+use rand::rngs::ThreadRng;
 use raytraceweekend::{Camera, Colour, Point3, Ray, Sphere, Vec3, write_png};
 use raytraceweekend::geom::shape::{Hittable, HittableList};
 
@@ -17,10 +19,14 @@ fn ray_colour<H: Hittable>(r: &Ray, hittable: &H) -> Colour {
 
 fn main() {
 
+    let args: Vec<_> = std::env::args().collect();
+    let samples_per_pixel = args.get(1).map(|s| s.parse().unwrap()).unwrap_or(1);
+
     // Image
     let aspect_ratio = 16.0 / 9.0;
     let image_width = 400;
     let image_height = (image_width as f64 / aspect_ratio) as i32;
+
 
     // World
     let mut world = HittableList { objects: Vec::new() };
@@ -34,15 +40,27 @@ fn main() {
     for j in (0..image_height).rev() {
         eprintln!("Scan lines remaining {j}");
         for i in 0..image_width {
-            let u = (i as f64) / (image_width - 1) as f64;
-            let v = (j as f64) / (image_height - 1) as f64;
-            let r = camera.get_ray(u, v);
-            let pixel_color = ray_colour(&r, &world);
+            let mut pixel_color = Colour::default();
+
+            for k in 0..samples_per_pixel {
+                let u = (i as f64 + random_double(samples_per_pixel)) / (image_width-1) as f64;
+                let v = (j as f64 + random_double(samples_per_pixel)) / (image_height-1) as f64;
+                let r = camera.get_ray(u, v);
+                pixel_color += ray_colour(&r, &world);
+            }
             result.push(pixel_color);
             // println!("{pixel_color}");
         }
     }
 
-    write_png(&mut stdout(), &result, image_width as u32, image_height as u32, 1 as u32);
+    write_png(&mut stdout(), &result, image_width as u32, image_height as u32, samples_per_pixel);
     eprintln!("Done!")
+}
+
+fn random_double(samples_per_pixel: u32) -> f64 {
+    return if samples_per_pixel == 1 {
+        0.0
+    } else {
+        rand::random()
+    }
 }
