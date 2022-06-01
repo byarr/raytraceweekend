@@ -5,7 +5,7 @@ use raytraceweekend::{write_png, Camera, Colour, Point3, Ray, Sphere, Vec3};
 use std::io::stdout;
 
 fn ray_colour<H: Hittable>(r: &Ray, hittable: &H, depth: u32) -> Colour {
-    if depth <= 0 {
+    if depth == 0 {
         return Colour::new(0.0, 0.0, 0.0);
     }
 
@@ -55,7 +55,7 @@ fn main() {
         for i in 0..image_width {
             let mut pixel_color = Colour::default();
 
-            for k in 0..samples_per_pixel {
+            for _k in 0..samples_per_pixel {
                 let u = (i as f64 + random_double(&mut rng, samples_per_pixel))
                     / (image_width - 1) as f64;
                 let v = (j as f64 + random_double(&mut rng, samples_per_pixel))
@@ -74,14 +74,14 @@ fn main() {
         image_width as u32,
         image_height as u32,
         samples_per_pixel,
-    );
+    ).unwrap();
     eprintln!("Done!")
 }
 
 fn random_double(rng: &mut StdRng, samples_per_pixel: u32) -> f64 {
-    return if samples_per_pixel == 1 {
+    if samples_per_pixel == 1 {
         0.0
     } else {
         rng.gen()
-    };
+    }
 }

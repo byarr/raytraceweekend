@@ -50,7 +50,7 @@ impl Hittable for HittableList {
                 temp_rec = Some(r);
             }
         }
-        return temp_rec;
+        temp_rec
     }
 }
 
@@ -82,6 +82,6 @@ impl Hittable for Sphere {
         let p = r.at(t);
         let outward_normal = (p - self.center) / self.radius;
 
-        return Some(HitRecord::new(p, outward_normal, t, r));
+        Some(HitRecord::new(p, outward_normal, t, r))
     }
 }

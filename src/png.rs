@@ -1,4 +1,4 @@
-use crate::{Colour, Vec3};
+use crate::Colour;
 use std::io::Write;
 
 pub fn write_png<W: Write>(

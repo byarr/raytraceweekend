@@ -6,7 +6,6 @@ pub use geom::Colour;
 pub use geom::Point3;
 pub use geom::Ray;
 pub use geom::Vec3;
-use std::ops::Range;
 
 pub use camera::Camera;
 
@@ -20,5 +19,5 @@ pub fn clamp(x: f64, min: f64, max: f64) -> f64 {
     if x > max {
         return max;
     };
-    return x;
+    x
 }
