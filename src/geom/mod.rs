@@ -1,4 +1,5 @@
 pub mod shape;
+pub mod material;
 
 use std::fmt::{Display, Formatter};
 use std::ops::{Add, AddAssign, Div, DivAssign, Index, Mul, MulAssign, Neg, Range, Sub};
@@ -55,6 +56,12 @@ impl Vec3 {
             return p;
         }
     }
+
+    pub fn near_zero(&self) -> bool {
+        let s = 1e-8;
+        self.e[0].abs() < s && self.e[1].abs() < s && self.e[2].abs() < s
+    }
+
 
 }
 

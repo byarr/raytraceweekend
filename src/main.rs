@@ -14,7 +14,7 @@ fn ray_colour<H: Hittable>(r: &Ray, hittable: &H, depth: u32) -> Colour {
     let hit = hittable.hit(r, 0.001, f64::INFINITY);
 
     if let Some(t) = hit {
-        let target = t.p + t.normal + Vec3::random_in_unit_sphere();
+        let target = t.p + t.normal + Vec3::random_in_unit_sphere().unit_vector();
         return 0.5 * ray_colour(&Ray::new(t.p, target - t.p), hittable, depth-1);
     }
 
