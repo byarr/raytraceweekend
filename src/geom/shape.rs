@@ -15,9 +15,16 @@ pub struct HitRecord {
 impl HitRecord {
     pub fn new(p: Point3, outward_normal: Vec3, t: f64, r: &Ray) -> Self {
         let front_face = r.direction.dot(&outward_normal) < 0.0;
-        let normal = if front_face { outward_normal} else {-outward_normal};
+        let normal = if front_face {
+            outward_normal
+        } else {
+            -outward_normal
+        };
         HitRecord {
-            p, normal, t, front_face
+            p,
+            normal,
+            t,
+            front_face,
         }
     }
 }
@@ -27,7 +34,7 @@ pub trait Hittable {
 }
 
 pub struct HittableList {
-    pub objects: Vec<Box<dyn Hittable>>
+    pub objects: Vec<Box<dyn Hittable>>,
 }
 
 impl Hittable for HittableList {
@@ -52,12 +59,12 @@ impl Hittable for Sphere {
         let oc = r.origin - self.center;
 
         let a = r.direction.length_squared();
-        let half_b = oc.dot( &r.direction);
-        let c = oc.length_squared() - self.radius*self.radius;
+        let half_b = oc.dot(&r.direction);
+        let c = oc.length_squared() - self.radius * self.radius;
 
-        let discriminant = half_b*half_b - a*c;
+        let discriminant = half_b * half_b - a * c;
         if discriminant < 0.0 {
-            return None
+            return None;
         }
 
         let sqrtd = discriminant.sqrt();
@@ -67,7 +74,7 @@ impl Hittable for Sphere {
         if root < t_min || t_max < root {
             root = (-half_b + sqrtd) / a;
             if root < t_min || t_max < root {
-                return None
+                return None;
             }
         }
 

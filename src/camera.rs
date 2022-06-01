@@ -17,15 +17,22 @@ impl Default for Camera {
         let origin = Point3::new(0.0, 0.0, 0.0);
         let horizontal = Vec3::new(viewport_width, 0.0, 0.0);
         let vertical = Vec3::new(0.0, viewport_height, 0.0);
-        let lower_left_corner = origin - horizontal/2.0 - vertical/2.0 - Vec3::new(0.0, 0.0, focal_length);
+        let lower_left_corner =
+            origin - horizontal / 2.0 - vertical / 2.0 - Vec3::new(0.0, 0.0, focal_length);
         Camera {
-            origin, lower_left_corner, horizontal, vertical
+            origin,
+            lower_left_corner,
+            horizontal,
+            vertical,
         }
     }
 }
 
 impl Camera {
     pub fn get_ray(&self, u: f64, v: f64) -> Ray {
-        return Ray::new(self.origin, self.lower_left_corner + u*self.horizontal + v*self.vertical - self.origin);
+        return Ray::new(
+            self.origin,
+            self.lower_left_corner + u * self.horizontal + v * self.vertical - self.origin,
+        );
     }
 }

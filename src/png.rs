@@ -1,8 +1,13 @@
-use std::io::Write;
 use crate::{Colour, Vec3};
+use std::io::Write;
 
-pub fn write_png<W: Write>(w: &mut W, data: &[Colour], width: u32, heigth: u32, samples_per_pixel: u32) -> std::io::Result<()> {
-
+pub fn write_png<W: Write>(
+    w: &mut W,
+    data: &[Colour],
+    width: u32,
+    heigth: u32,
+    samples_per_pixel: u32,
+) -> std::io::Result<()> {
     let mut encoder = png::Encoder::new(w, width, heigth); // Width is 2 pixels and height is 1.
     encoder.set_color(png::ColorType::Rgb);
     encoder.set_depth(png::BitDepth::Eight);
@@ -21,4 +26,3 @@ fn color_to_bytes(data: &[Colour], samples_per_pixel: u32) -> Vec<u8> {
     });
     result
 }
-

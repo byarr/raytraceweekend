@@ -11,7 +11,7 @@ trait Material {
 }
 
 struct Lambertian {
-    albedo: Colour
+    albedo: Colour,
 }
 
 impl Material for Lambertian {
@@ -25,7 +25,7 @@ impl Material for Lambertian {
         let scattered = Ray::new(rec.p, scatter_direction);
         Some(Scatter {
             scattered,
-            attenuation: self.albedo
+            attenuation: self.albedo,
         })
     }
 }

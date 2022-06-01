@@ -1,10 +1,10 @@
-pub mod shape;
 pub mod material;
+pub mod shape;
 
+use crate::clamp;
+use rand::{thread_rng, Rng};
 use std::fmt::{Display, Formatter};
 use std::ops::{Add, AddAssign, Div, DivAssign, Index, Mul, MulAssign, Neg, Range, Sub};
-use rand::{Rng, thread_rng};
-use crate::clamp;
 
 #[derive(Debug, PartialOrd, PartialEq, Default, Copy, Clone)]
 pub struct Vec3 {
@@ -49,7 +49,11 @@ impl Vec3 {
 
     pub fn random_in_unit_sphere() -> Vec3 {
         loop {
-            let p = Vec3::new(thread_rng().gen_range(-1.0..1.0), thread_rng().gen_range(-1.0..1.0), thread_rng().gen_range(-1.0..1.0));
+            let p = Vec3::new(
+                thread_rng().gen_range(-1.0..1.0),
+                thread_rng().gen_range(-1.0..1.0),
+                thread_rng().gen_range(-1.0..1.0),
+            );
             if p.length_squared() >= 1.0 {
                 continue;
             }
@@ -61,8 +65,6 @@ impl Vec3 {
         let s = 1e-8;
         self.e[0].abs() < s && self.e[1].abs() < s && self.e[2].abs() < s
     }
-
-
 }
 
 impl AddAssign for Vec3 {
@@ -176,7 +178,6 @@ impl Colour {
         data.push((256.0 * clamp(g, 0.0, 0.999)) as u8);
         data.push((256.0 * clamp(b, 0.0, 0.999)) as u8);
     }
-
 }
 
 #[derive(Debug)]

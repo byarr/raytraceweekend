@@ -1,12 +1,10 @@
-use std::io::stdout;
 use rand::prelude::*;
 use rand::Rng;
-use raytraceweekend::{Camera, Colour, Point3, Ray, Sphere, Vec3, write_png};
 use raytraceweekend::geom::shape::{Hittable, HittableList};
-
+use raytraceweekend::{write_png, Camera, Colour, Point3, Ray, Sphere, Vec3};
+use std::io::stdout;
 
 fn ray_colour<H: Hittable>(r: &Ray, hittable: &H, depth: u32) -> Colour {
-
     if depth <= 0 {
         return Colour::new(0.0, 0.0, 0.0);
     }
@@ -15,7 +13,7 @@ fn ray_colour<H: Hittable>(r: &Ray, hittable: &H, depth: u32) -> Colour {
 
     if let Some(t) = hit {
         let target = t.p + t.normal + Vec3::random_in_unit_sphere().unit_vector();
-        return 0.5 * ray_colour(&Ray::new(t.p, target - t.p), hittable, depth-1);
+        return 0.5 * ray_colour(&Ray::new(t.p, target - t.p), hittable, depth - 1);
     }
 
     let unit = r.direction.unit_vector();
@@ -24,7 +22,6 @@ fn ray_colour<H: Hittable>(r: &Ray, hittable: &H, depth: u32) -> Colour {
 }
 
 fn main() {
-
     let mut rng = rand::rngs::StdRng::seed_from_u64(0xDEADBEEF);
 
     let args: Vec<_> = std::env::args().collect();
@@ -37,9 +34,17 @@ fn main() {
     let max_depth = 50;
 
     // World
-    let mut world = HittableList { objects: Vec::new() };
-    world.objects.push(Box::new(Sphere{ center: Point3::new(0.0, 0.0, -1.0), radius: 0.5 }));
-    world.objects.push(Box::new(Sphere{ center: Point3::new(0.0, -100.5, -1.0), radius: 100.0 }));
+    let mut world = HittableList {
+        objects: Vec::new(),
+    };
+    world.objects.push(Box::new(Sphere {
+        center: Point3::new(0.0, 0.0, -1.0),
+        radius: 0.5,
+    }));
+    world.objects.push(Box::new(Sphere {
+        center: Point3::new(0.0, -100.5, -1.0),
+        radius: 100.0,
+    }));
 
     // Camera
     let camera = Camera::default();
@@ -51,8 +56,10 @@ fn main() {
             let mut pixel_color = Colour::default();
 
             for k in 0..samples_per_pixel {
-                let u = (i as f64 + random_double(&mut rng, samples_per_pixel)) / (image_width-1) as f64;
-                let v = (j as f64 + random_double(&mut rng, samples_per_pixel)) / (image_height-1) as f64;
+                let u = (i as f64 + random_double(&mut rng, samples_per_pixel))
+                    / (image_width - 1) as f64;
+                let v = (j as f64 + random_double(&mut rng, samples_per_pixel))
+                    / (image_height - 1) as f64;
                 let r = camera.get_ray(u, v);
                 pixel_color += ray_colour(&r, &world, max_depth);
             }
@@ -61,7 +68,13 @@ fn main() {
         }
     }
 
-    write_png(&mut stdout(), &result, image_width as u32, image_height as u32, samples_per_pixel);
+    write_png(
+        &mut stdout(),
+        &result,
+        image_width as u32,
+        image_height as u32,
+        samples_per_pixel,
+    );
     eprintln!("Done!")
 }
 
@@ -70,5 +83,5 @@ fn random_double(rng: &mut StdRng, samples_per_pixel: u32) -> f64 {
         0.0
     } else {
         rng.gen()
-    }
+    };
 }
