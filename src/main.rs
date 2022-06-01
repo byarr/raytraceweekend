@@ -1,17 +1,16 @@
 use std::io::stdout;
-use raytraceweekend::{Colour, Point3, Ray, Sphere, Vec3, write_png};
-use raytraceweekend::geom::shape::Hittable;
+use rand::prelude::*;
+use rand::Rng;
+use raytraceweekend::{Camera, Colour, Point3, Ray, Sphere, Vec3, write_png};
+use raytraceweekend::geom::shape::{Hittable, HittableList};
 
-fn ray_colour(r: &Ray) -> Colour {
-    let s = Sphere {
-        center: Point3::new(0.0, 0.0, -1.0),
-        radius: 0.5,
-    };
-    let hit = s.hit(r, 0.0, f64::INFINITY);
+
+fn ray_colour<H: Hittable>(r: &Ray, hittable: &H) -> Colour {
+
+    let hit = hittable.hit(r, 0.0, f64::INFINITY);
 
     if let Some(t) = hit {
-        let n = (r.at(t.t) - Vec3::new(0.0, 0.0, -1.0)).unit_vector();
-        return 0.5 * Colour::new(n.x() + 1.0, n.y() + 1.0, n.z() + 1.0);
+        return 0.5 * (t.normal + Colour::new(1.0,1.0,1.0));
     }
 
     let unit = r.direction.unit_vector();
@@ -21,39 +20,50 @@ fn ray_colour(r: &Ray) -> Colour {
 
 fn main() {
 
+    let mut rng = rand::rngs::StdRng::seed_from_u64(0xDEADBEEF);
+
+    let args: Vec<_> = std::env::args().collect();
+    let samples_per_pixel = args.get(1).map(|s| s.parse().unwrap()).unwrap_or(1);
+
     // Image
     let aspect_ratio = 16.0 / 9.0;
     let image_width = 400;
     let image_height = (image_width as f64 / aspect_ratio) as i32;
 
-    // Camera
-    let viewport_height = 2.0;
-    let viewport_width = aspect_ratio * viewport_height;
-    let focal_length = 1.0;
 
-    let origin = Point3::default();
-    let horizontal = Vec3::new(viewport_width, 0.0, 0.0);
-    let vertical = Vec3::new(0.0, viewport_height, 0.0);
-    let lower_left_corner =
-        origin - horizontal / 2.0 - vertical / 2.0 - Vec3::new(0.0, 0.0, focal_length);
+    // World
+    let mut world = HittableList { objects: Vec::new() };
+    world.objects.push(Box::new(Sphere{ center: Point3::new(0.0, 0.0, -1.0), radius: 0.5 }));
+    world.objects.push(Box::new(Sphere{ center: Point3::new(0.0, -100.5, -1.0), radius: 100.0 }));
+
+    // Camera
+    let camera = Camera::default();
 
     let mut result = Vec::new();
-    // println!("P3\n{image_width} {image_height}\n255");
     for j in (0..image_height).rev() {
         eprintln!("Scan lines remaining {j}");
         for i in 0..image_width {
-            let u = (i as f64) / (image_width - 1) as f64;
-            let v = (j as f64) / (image_height - 1) as f64;
-            let r = Ray::new(
-                origin,
-                lower_left_corner + horizontal * u + vertical * v - origin,
-            );
-            let pixel_color = ray_colour(&r);
+            let mut pixel_color = Colour::default();
+
+            for k in 0..samples_per_pixel {
+                let u = (i as f64 + random_double(&mut rng, samples_per_pixel)) / (image_width-1) as f64;
+                let v = (j as f64 + random_double(&mut rng, samples_per_pixel)) / (image_height-1) as f64;
+                let r = camera.get_ray(u, v);
+                pixel_color += ray_colour(&r, &world);
+            }
             result.push(pixel_color);
             // println!("{pixel_color}");
         }
     }
 
-    write_png(&mut stdout(), &result, image_width as u32, image_height as u32, 1);
+    write_png(&mut stdout(), &result, image_width as u32, image_height as u32, samples_per_pixel);
     eprintln!("Done!")
+}
+
+fn random_double(rng: &mut StdRng, samples_per_pixel: u32) -> f64 {
+    return if samples_per_pixel == 1 {
+        0.0
+    } else {
+        rng.gen()
+    }
 }
