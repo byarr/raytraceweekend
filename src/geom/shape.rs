@@ -1,6 +1,6 @@
-use std::rc::Rc;
-use crate::{Point3, Ray, Vec3};
 use crate::geom::material::Material;
+use crate::{Point3, Ray, Vec3};
+use std::rc::Rc;
 
 pub struct Sphere {
     pub center: Point3,
@@ -17,7 +17,13 @@ pub struct HitRecord {
 }
 
 impl HitRecord {
-    pub fn new(p: Point3, outward_normal: Vec3, t: f64, r: &Ray, material: Rc<Box<dyn Material>>) -> Self {
+    pub fn new(
+        p: Point3,
+        outward_normal: Vec3,
+        t: f64,
+        r: &Ray,
+        material: Rc<Box<dyn Material>>,
+    ) -> Self {
         let front_face = r.direction.dot(&outward_normal) < 0.0;
         let normal = if front_face {
             outward_normal
@@ -29,7 +35,7 @@ impl HitRecord {
             normal,
             t,
             front_face,
-            material
+            material,
         }
     }
 }
@@ -44,11 +50,9 @@ pub struct HittableList {
 }
 
 impl HittableList {
-
     pub fn add(&mut self, object: Box<dyn Hittable>) {
         self.objects.push(object);
     }
-
 }
 
 impl Hittable for HittableList {
@@ -96,6 +100,12 @@ impl Hittable for Sphere {
         let p = r.at(t);
         let outward_normal = (p - self.center) / self.radius;
 
-        Some(HitRecord::new(p, outward_normal, t, r, self.material.clone()))
+        Some(HitRecord::new(
+            p,
+            outward_normal,
+            t,
+            r,
+            self.material.clone(),
+        ))
     }
 }
