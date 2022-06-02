@@ -16,6 +16,14 @@ pub struct Lambertian {
     pub albedo: Colour,
 }
 
+impl Lambertian {
+    pub fn new(r: f64, g: f64, b: f64) -> Self {
+        Lambertian {
+            albedo: Colour::new(r, g, b)
+        }
+    }
+}
+
 impl Material for Lambertian {
     fn scatter(&self, _r_in: &Ray, rec: &HitRecord) -> Option<Scatter> {
         let mut scatter_direction = rec.normal + Vec3::random_in_unit_sphere().unit_vector();

@@ -34,3 +34,7 @@ https://raytracing.github.io/books/RayTracingInOneWeekend.html#overview
 
 ![image](output/glass_refract_slick.png)
 ![image](output/glass_hollow.png)
+
+## Camera
+
+![image](output/closeup_balls.png)
