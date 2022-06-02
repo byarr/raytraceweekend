@@ -51,6 +51,7 @@ fn main() {
     world.add( Box::new(Sphere { center: Point3::new(0.0, -100.5, -1.0), radius: 100.0, material: material_ground.clone() }));
     world.add( Box::new(Sphere { center: Point3::new(0.0,    0.0, -1.0), radius: 0.5, material: material_center.clone() }));
     world.add( Box::new(Sphere { center: Point3::new(-1.0,    0.0, -1.0), radius: 0.5, material: material_left.clone() }));
+    world.add( Box::new(Sphere { center: Point3::new(-1.0,    0.0, -1.0), radius: -0.4, material: material_left.clone() }));
     world.add( Box::new(Sphere { center: Point3::new( 1.0,    0.0, -1.0), radius: 0.5, material: material_right.clone() }));
 
 
