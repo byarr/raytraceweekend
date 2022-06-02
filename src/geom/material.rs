@@ -1,3 +1,4 @@
+use rand::{Rng, thread_rng};
 use crate::geom::shape::HitRecord;
 use crate::{Colour, Ray, Vec3};
 
@@ -87,6 +88,13 @@ impl Dielectric {
         let r_out_parallel = -(1.0 - r_out_perp.length_squared()).abs().sqrt() * *n;
         r_out_perp + r_out_parallel
     }
+
+    fn reflectance(cosine: f64, ref_idx: f64) -> f64 {
+        // Use Schlick's approximation for reflectance.
+        let r0 = (1.0-ref_idx) / (1.0+ref_idx);
+        let r0 = r0*r0;
+        return r0 + (1.0 - r0) *  (1.0 - cosine).powi(5)
+    }
 }
 
 impl Material for Dielectric {
@@ -99,7 +107,7 @@ impl Material for Dielectric {
         let sin_theta = (1.0 - cos_theta*cos_theta).sqrt();
 
         let cannot_refract = refraction_ratio * sin_theta > 1.0;
-        let direction = if cannot_refract {
+        let direction = if cannot_refract || Dielectric::reflectance(cos_theta, refraction_ratio) > thread_rng().gen() {
             Metal::reflect(&unit_direction, &rec.normal)
         }
         else {
