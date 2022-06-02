@@ -2,17 +2,17 @@ use crate::geom::shape::HitRecord;
 use crate::{Colour, Ray, Vec3};
 
 #[derive(Debug)]
-struct Scatter {
-    scattered: Ray,
-    attenuation: Colour,
+pub struct Scatter {
+    pub scattered: Ray,
+    pub attenuation: Colour,
 }
 
-trait Material {
+pub trait Material {
     fn scatter(&self, r_in: &Ray, hit_record: &HitRecord) -> Option<Scatter>;
 }
 
-struct Lambertian {
-    albedo: Colour,
+pub struct Lambertian {
+    pub albedo: Colour,
 }
 
 impl Material for Lambertian {
@@ -31,8 +31,8 @@ impl Material for Lambertian {
     }
 }
 
-struct Metal {
-    albedo: Colour,
+pub struct Metal {
+    pub albedo: Colour,
 }
 
 impl Metal {
