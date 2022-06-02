@@ -13,5 +13,3 @@ jobs:
       - {name: test, uses: actions-rs/cargo@v1, with: {command: test} }
       - {name: clippy, uses: actions-rs/cargo@v1, with: {command: clippy, args: -- -D warnings}}
       - {name: format, uses: actions-rs/cargo@v1, with: {command: fmt, args: --all -- --check}}
-      - {name: run, shell: bash, run: ./build.sh}
-      - {name: upload, uses: actions/upload-artifact@v3, with: {path: output/*} }
