@@ -74,7 +74,8 @@ fn main() {
         image_width as u32,
         image_height as u32,
         samples_per_pixel,
-    ).unwrap();
+    )
+    .unwrap();
     eprintln!("Done!")
 }
 
