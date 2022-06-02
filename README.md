@@ -41,3 +41,5 @@ https://raytracing.github.io/books/RayTracingInOneWeekend.html#overview
 
 ![image](output/3_balls_zoom_out.png)
 ![image](output/3_balls_zoom_in.png)
+
+![image](output/3_balls_depth.png)
