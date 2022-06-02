@@ -38,3 +38,6 @@ https://raytracing.github.io/books/RayTracingInOneWeekend.html#overview
 ## Camera
 
 ![image](output/closeup_balls.png)
+
+![image](output/3_balls_zoom_out.png)
+![image](output/3_balls_zoom_in.png)

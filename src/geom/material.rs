@@ -19,7 +19,7 @@ pub struct Lambertian {
 impl Lambertian {
     pub fn new(r: f64, g: f64, b: f64) -> Self {
         Lambertian {
-            albedo: Colour::new(r, g, b)
+            albedo: Colour::new(r, g, b),
         }
     }
 }

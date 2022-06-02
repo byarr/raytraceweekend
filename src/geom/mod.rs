@@ -23,6 +23,13 @@ impl Vec3 {
         self.e.iter().zip(other.e.iter()).map(|x| x.0 * x.1).sum()
     }
 
+    pub fn cross(&self, other: &Self) -> Vec3 {
+        let x = self.e[1] * other.e[2] - self.e[2] * other.e[1];
+        let y = self.e[2] * other.e[0] - self.e[0] * other.e[2];
+        let z = self.e[0] * other.e[1] - self.e[1] * other.e[0];
+        Vec3::new(x, y, z)
+    }
+
     pub fn length_squared(&self) -> f64 {
         self.e.iter().map(|i| i * i).sum()
     }

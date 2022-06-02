@@ -2,7 +2,7 @@ use rand::prelude::*;
 use rand::Rng;
 use raytraceweekend::geom::material::{Dielectric, Lambertian, Material, Metal};
 use raytraceweekend::geom::shape::{Hittable, HittableList};
-use raytraceweekend::{write_png, Camera, Colour, Point3, Ray, Sphere};
+use raytraceweekend::{write_png, Camera, Colour, Point3, Ray, Sphere, Vec3};
 
 use std::io::stdout;
 use std::rc::Rc;
@@ -41,26 +41,51 @@ fn main() {
 
     // World
 
-    let R = (std::f64::consts::PI/4.0).cos();
-
     let mut world = HittableList::default();
 
-    let material_left: Rc<Box<dyn Material>> = Rc::new(Box::new(Lambertian::new(0.0,0.0,1.0)));
-    let material_right: Rc<Box<dyn Material>> = Rc::new(Box::new(Lambertian::new(1.0,0.0,0.0)));
+    let material_ground: Rc<Box<dyn Material>> = Rc::new(Box::new(Lambertian {
+        albedo: Colour::new(0.8, 0.8, 0.0),
+    }));
+    let material_center: Rc<Box<dyn Material>> = Rc::new(Box::new(Lambertian {
+        albedo: Colour::new(0.1, 0.2, 0.5),
+    }));
+    let material_left: Rc<Box<dyn Material>> = Rc::new(Box::new(Dielectric::new(1.5)));
+    let material_right: Rc<Box<dyn Material>> = Rc::new(Box::new(Metal::new(0.8, 0.6, 0.2, 0.0)));
 
     world.add(Box::new(Sphere {
-        center: Point3::new(-R, 0.0, -1.0),
-        radius: R,
+        center: Point3::new(0.0, -100.5, -1.0),
+        radius: 100.0,
+        material: material_ground.clone(),
+    }));
+    world.add(Box::new(Sphere {
+        center: Point3::new(0.0, 0.0, -1.0),
+        radius: 0.5,
+        material: material_center.clone(),
+    }));
+    world.add(Box::new(Sphere {
+        center: Point3::new(-1.0, 0.0, -1.0),
+        radius: 0.5,
         material: material_left.clone(),
     }));
     world.add(Box::new(Sphere {
-        center: Point3::new(R, 0.0, -1.0),
-        radius: R,
+        center: Point3::new(-1.0, 0.0, -1.0),
+        radius: -0.4,
+        material: material_left.clone(),
+    }));
+    world.add(Box::new(Sphere {
+        center: Point3::new(1.0, 0.0, -1.0),
+        radius: 0.5,
         material: material_right.clone(),
     }));
 
     // Camera
-    let camera = Camera::new(90.0, aspect_ratio);
+    let camera = Camera::new(
+        Point3::new(-2.0, 2.0, 1.0),
+        Point3::new(0.0, 0.0, -1.0),
+        Vec3::new(0.0, 1.0, 0.0),
+        20.0,
+        aspect_ratio,
+    );
 
     let mut result = Vec::new();
     for j in (0..image_height).rev() {
