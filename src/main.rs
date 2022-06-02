@@ -5,7 +5,7 @@ use raytraceweekend::geom::shape::{Hittable, HittableList};
 use raytraceweekend::{write_png, Camera, Colour, Point3, Ray, Sphere, Vec3};
 use std::io::stdout;
 use std::rc::Rc;
-use raytraceweekend::geom::material::{Lambertian, Material, Metal};
+use raytraceweekend::geom::material::{Dielectric, Lambertian, Material, Metal};
 
 fn ray_colour<H: Hittable>(r: &Ray, hittable: &H, depth: u32) -> Colour {
     if depth == 0 {
@@ -44,8 +44,8 @@ fn main() {
     let mut world = HittableList::default();
 
     let material_ground: Rc<Box<dyn Material>> = Rc::new(Box::new(Lambertian{albedo: Colour::new(0.8,0.8,0.0)}));
-    let material_center: Rc<Box<dyn Material>>  = Rc::new(Box::new(Lambertian{albedo: Colour::new(0.7, 0.3, 0.3)}));
-    let material_left: Rc<Box<dyn Material>>  = Rc::new(Box::new(Metal::new(0.8, 0.8, 0.8, 0.3)));
+    let material_center: Rc<Box<dyn Material>>  = Rc::new(Box::new(Dielectric::new(1.5)));
+    let material_left: Rc<Box<dyn Material>>  =  Rc::new(Box::new(Dielectric::new(1.5)));
     let material_right: Rc<Box<dyn Material>>  = Rc::new(Box::new(Metal::new(0.8, 0.6, 0.2, 1.0)));
 
     world.add( Box::new(Sphere { center: Point3::new(0.0, -100.5, -1.0), radius: 100.0, material: material_ground.clone() }));
