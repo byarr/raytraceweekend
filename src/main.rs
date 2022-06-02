@@ -32,7 +32,7 @@ fn main() {
     let mut rng = rand::rngs::StdRng::seed_from_u64(0xDEADBEEF);
 
     let args: Vec<_> = std::env::args().collect();
-    let samples_per_pixel = args.get(1).map(|s| s.parse().unwrap()).unwrap_or(1);
+    let samples_per_pixel = args.get(1).map(|s| s.parse().unwrap()).unwrap_or(100);
 
     // Image
     let aspect_ratio = 16.0 / 9.0;
